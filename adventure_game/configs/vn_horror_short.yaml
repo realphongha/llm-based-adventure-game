@@ -1,0 +1,29 @@
+game_name: vietnamese_horror_short
+genre: "horror, sci-fi, vietnamese folklore"
+language: "Vietnamese"
+lore_seed: ""
+stats:
+  - health
+  - sanity
+npcs: 2
+items: 5
+story_size: 1024
+models:
+  lore_generator: 
+    provider: openai
+    create_params:
+      model: gpt-5
+      reasoning_effort: medium
+      verbosity: medium
+  narrator: 
+    provider: openai
+    create_params:
+      model: gpt-5-mini
+      reasoning_effort: low
+      verbosity: low
+  summarizer:
+    provider: openai
+    create_params:
+      model: gpt-5-mini
+      reasoning_effort: medium
+      verbosity: medium

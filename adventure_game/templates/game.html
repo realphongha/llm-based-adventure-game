@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>LLM Adventure</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <main class="container">
+      <header>
+        <h1>LLM-Driven Adventure</h1>
+        <p class="subtitle">Mysteries unfold with every prompt.</p>
+      </header>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-container">
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <section class="narration">
+        <h2>Narrator</h2>
+        <div class="narration-box">
+          {% if narration %}
+            <p>{{ narration }}</p>
+          {% else %}
+            <p>The story awaits your first command.</p>
+          {% endif %}
+        </div>
+        <div class="meta">
+          <span>Tokens used: {{ tokens }}</span>
+          {% if summary %}
+            <details>
+              <summary>Session Summary</summary>
+              <p>{{ summary }}</p>
+            </details>
+          {% endif %}
+        </div>
+      </section>
+
+      <section class="input-section">
+        <form method="post">
+          <textarea
+            name="player_input"
+            rows="3"
+            placeholder="Describe your next action..."
+            autofocus
+          ></textarea>
+          <div class="form-actions">
+            <button type="submit">Send Action</button>
+          </div>
+        </form>
+        <form method="post" action="{{ url_for('reset') }}">
+          <button type="submit" class="secondary">Reset Game</button>
+        </form>
+      </section>
+
+      <section class="state-panels">
+        <div class="panel">
+          <h3>Stats</h3>
+          <ul>
+            {% for key, value in stats.items() %}
+              <li><strong>{{ key | capitalize }}:</strong> {{ value }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>Inventory</h3>
+          {% if inventory %}
+            <ul>
+              {% for item in inventory %}
+                <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p>Empty hands, empty pockets.</p>
+          {% endif %}
+        </div>
+        <div class="panel">
+          <h3>NPC Relationships</h3>
+          {% if npc_rel %}
+            <ul>
+              {% for npc, relation in npc_rel.items() %}
+                <li><strong>{{ npc }}:</strong> {{ relation }}</li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p>You haven't met anyone... yet.</p>
+          {% endif %}
+        </div>
+      </section>
+
+      <section class="log">
+        <h3>Recent Turns</h3>
+        {% if log %}
+          <ol>
+            {% for entry in log %}
+              <li>
+                <p><strong>Player:</strong> {{ entry.player }}</p>
+                <p><strong>Narrator:</strong> {{ entry.narrator }}</p>
+              </li>
+            {% endfor %}
+          </ol>
+        {% else %}
+          <p>No turns yet.</p>
+        {% endif %}
+      </section>
+    </main>
+  </body>
+</html>
