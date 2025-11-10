@@ -14,16 +14,18 @@ def build_system_prompt(config: Dict[str, Any], hidden_lore: str) -> str:
         3. Maintain tone and continuity with the active genre.
         """
     ).strip()
+    stats_str = ", ".join(config["stats"])
     game_rules = dedent(
         """
         Game Rules:
-        1. Game over when player 'health' or 'sanity' drops below 1. World state will be changed to 'game_over'.
-        2. When the player defeats the final boss, it will be a victory. World state will be changed to 'victory'.
+        1. The player has some stats: {stats_str}. At the start of the game, these stats are set to 100.
+        2. Game over when player 'health' or 'sanity' drops below 1. World state will be changed to 'game_over'.
+        3. When the player defeats the final boss, it will be a victory. World state will be changed to 'victory'.
         """
     ).strip()
     return dedent(
         f"""
-        You are the narrator of an interactive {genre} text adventure.
+        You are the narrator of an interactive `{genre}` text adventure.
         You know hidden lore unavailable to the player:
         {hidden_lore}
 
@@ -38,6 +40,7 @@ def build_system_prompt(config: Dict[str, Any], hidden_lore: str) -> str:
         - stats: the updated player stats
         - inventory: the updated player inventory
         - npc_rel: the updated NPC relationships
+        - world_state: the updated world state
         """
     ).strip()
 

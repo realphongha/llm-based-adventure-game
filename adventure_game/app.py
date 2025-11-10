@@ -10,7 +10,7 @@ from .core.game_engine import GameEngine
 
 
 BASE_DIR = Path(__file__).resolve().parent
-CONFIG_PATH = BASE_DIR / "configs" / "vn_horror_short.yaml"
+CONFIG_PATH = BASE_DIR / "configs" / "5d_spacetime_romance.yaml"
 DB_PATH = BASE_DIR / "game_state.db"
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 
@@ -63,6 +63,7 @@ def game() -> str:
         stats=ui_state["stats"],
         inventory=ui_state["inventory"],
         npc_rel=ui_state["npc_rel"],
+        world_state=ui_state["world_state"],
         log=ui_state["log"],
         summary=ui_state["summary"],
         tokens=ui_state["tokens"],

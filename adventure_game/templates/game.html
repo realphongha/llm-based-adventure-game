@@ -10,6 +10,18 @@
       <header>
         <h1>LLM-Driven Adventure</h1>
         <p class="subtitle">Mysteries unfold with every prompt.</p>
+        <!-- World state display -->
+        <p class="world-state">
+          World state:
+          {% if world_state %}
+            <strong class="state {{ world_state|replace(' ', '-') }}">{{ world_state }}</strong>
+          {% else %}
+            <em>unknown</em>
+          {% endif %}
+        </p>
+        {% if world_state == 'game_over' %}
+          <div class="banner game-over">Game Over. Reset to start a new adventure.</div>
+        {% endif %}
       </header>
 
       {% with messages = get_flashed_messages(with_categories=true) %}
@@ -47,11 +59,12 @@
           <textarea
             name="player_input"
             rows="3"
-            placeholder="Describe your next action..."
-            autofocus
+            placeholder="{% if world_state == 'game_over' %}Game over. Reset to play again.{% else %}Describe your next action...{% endif %}"
+            {% if world_state != 'game_over' %}autofocus{% endif %}
+            {% if world_state == 'game_over' %}disabled aria-disabled="true"{% endif %}
           ></textarea>
           <div class="form-actions">
-            <button type="submit">Send Action</button>
+            <button type="submit" {% if world_state == 'game_over' %}disabled aria-disabled="true" title="Game over. Reset to start a new adventure."{% endif %}>Send Action</button>
           </div>
         </form>
         <form method="post" action="{{ url_for('reset') }}">
@@ -112,3 +125,4 @@
     </main>
   </body>
 </html>
+

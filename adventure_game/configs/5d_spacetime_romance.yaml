@@ -1,20 +1,21 @@
-game_name: vietnamese_horror_short
-genre: "horror, vietnamese folklore"
-language: "Vietnamese"
-lore_seed: ""
+game_name: 5d-spacetime-romance
+genre: "mystery, sci-fi, romance"
+language: "English"
+lore_seed: "Romance between a 3d human male protagonist and a 2d temporal cat girl that exists in 2d time dimensions (causation and possibilities)"
 stats:
   - health
-  - sanity
-npcs: 2
-items: 4
-story_size: 512
+  - existence
+  - intelligence
+npcs: 5
+items: 5
+story_size: 1024
 models:
   lore_generator: 
     provider: openai
     create_params:
       model: gpt-5
-      reasoning_effort: medium
-      verbosity: medium
+      reasoning_effort: high
+      verbosity: high
   narrator: 
     provider: openai
     create_params:

@@ -79,7 +79,9 @@ class GameEngine:
         npcs = self.config["npcs"]
         items = self.config["items"]
         prompt = (
-            f"Expand the following seed into a rich hidden backstory of ({story_size} words).\n"
+            f"Expand the following seed into a rich hidden lore and story of ({story_size} words).\n"
+            f"The story must focus on the protagonist (the user)'s journey.\n"
+            f"The story should have a plot twist.\n"
             f"The story should include a maximum of {npcs} NPCs and {items} items.\n"
             f"The story must have a final boss, and the player must defeat it to win.\n"
             "Focus on mood, mystery, and stakes.\n"
@@ -130,6 +132,11 @@ class GameEngine:
             self.state["stats"] = narrator_json["stats"]
             self.state["inventory"] = narrator_json["inventory"]
             self.state["npc_rel"] = narrator_json["npc_rel"]
+            self.state["world_state"] = narrator_json["world_state"]
+            if self.state["stats"].get("health", 100) < 1:
+                self.state["world_state"] = "game_over"
+            if self.state["stats"].get("sanity", 100) < 1:
+                self.state["world_state"] = "game_over"
         except Exception as exc:
             raise RuntimeError(f"Failed to parse narrator response: {exc}") from exc
         usage = narration.get("usage", {})
@@ -139,7 +146,7 @@ class GameEngine:
         log_entry = {
             "turn": self.turn,
             "player": player_input,
-            "narrator": narrator_json["text"],
+            "narrator": narrator_text,
         }
         self.state.setdefault("log", []).append(log_entry)
 
@@ -178,6 +185,7 @@ class GameEngine:
             "stats": self.state.get("stats", {}),
             "inventory": self.state.get("inventory", []),
             "npc_rel": self.state.get("npc_rel", {}),
+            "world_state": self.state.get("world_state", {}),
             "log": self.state.get("log", []),
             "summary": self.summary,
             "tokens": self.token_usage,
@@ -204,11 +212,22 @@ class GameEngine:
                 user_prompt=user_prompt,
                 context=None,
             )
-            intro_text = narration.get("text", "").strip() or intro_text
             usage = narration.get("usage", {})
         except Exception as exc:  # pragma: no cover - defensive guard
             print(f"Intro narration failed, falling back: {exc}")
-
+        try:
+            narrator_json = json.loads(narration["text"].strip())
+            intro_text = narrator_json["text"]
+            self.state["stats"] = narrator_json["stats"]
+            self.state["inventory"] = narrator_json["inventory"]
+            self.state["npc_rel"] = narrator_json["npc_rel"]
+            self.state["world_state"] = narrator_json["world_state"]
+            if self.state["stats"].get("health", 100) < 1:
+                self.state["world_state"] = "game_over"
+            if self.state["stats"].get("sanity", 100) < 1:
+                self.state["world_state"] = "game_over"
+        except Exception as exc:
+            raise RuntimeError(f"Failed to parse narrator response: {exc}") from exc
         self.token_usage += usage.get(
             "total_tokens",
             count_tokens([system_prompt, user_prompt, intro_text]),

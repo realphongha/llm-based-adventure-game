@@ -14,20 +14,14 @@ Run a modular, genre-flexible text adventure locally with either OpenAI's GPT mo
 
 ```bash
 uv sync
-python -m adventure_game.app
-```
-
-By default the game uses the provider defined in `configs/config.yaml`. Override it via `ADVENTURE_PROVIDER`:
-
-```bash
-export ADVENTURE_PROVIDER="ollama/llama3"
+python -m adventure_game.app 
 ```
 
 For OpenAI you must also specify `OPENAI_API_KEY`.
 
 ### Customising the Adventure
 
-- Adjust `configs/config.yaml` to change genre, stats, and model choices.
+- Adjust `configs/{game_name}.yaml` to change genre, stats, model choices etc.
 - Hidden lore is expanded on start-up using `models.lore_generator`.
 - Gameplay state is persisted in `adventure_game/game_state.db`.
 

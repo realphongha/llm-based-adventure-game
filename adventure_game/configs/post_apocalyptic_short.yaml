@@ -1,10 +1,12 @@
-game_name: vietnamese_horror_short
-genre: "horror, vietnamese folklore"
-language: "Vietnamese"
-lore_seed: ""
+game_name: post-apocalyptic-short
+genre: "post-apocalyptic, mystery, dark fantasy, sci-fi"
+language: "English"
+lore_seed: "Attempt of building an utopia turns the world into a dystopian one"
 stats:
   - health
-  - sanity
+  - attack
+  - defense
+  - magic power
 npcs: 2
 items: 4
 story_size: 512
